@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Snakes</title>
+
+	<script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
+
+	<script type="text/javascript" src="js/game.js"></script>
+	<script type="text/javascript" src="js/snake.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+
+
+</head>
+
+<body>
+
+	<script>
+	(function () {
+		var game = new Phaser.Game(800,500, Phaser.AUTO, null);
+
+		game.state.add('Game', Game);
+		game.state.start('Game');
+	})();
+
+	</script>
+
+</body>
+</html>
