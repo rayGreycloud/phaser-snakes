@@ -150,7 +150,58 @@ Snake.prototype = {
       i++;
     }
 
+    if (prevDif === null || Math.abs(prevDif) > Math.abs(dif)) {
+      return i;
+    } else {
+      return i - 1;
+    }
+  },
 
+  onCycleComplete: function () {
+    if (this.queuedSections > 0) {
+      var lastSec = this.sections[this.sections.length - 1];
+      this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
+      this.queuedSections--;
+    }
+  },
+
+  setScale: function (scale) {
+    this.scale = scale;
+    this.preferredDistance = 17 * this.scale;
+
+    this.edgeLock.localOffsetB = [
+      0, this.game.physics.p2.pxmi(this.head.width*0.5 + this.edgeOffset)
+    ];
+
+    for (var i = 0; i < this.sections.length; i++) {
+      var sec = this.sections[i];
+      sec.scale.setTo(this.scale);
+      sec.body.data.shapes[0].radius = this.game.physics.p2.pxm(sec.width*0.5);
+    }
+  },
+
+  incrementSize: function () {
+    this.addSectionsAfterLast(1);
+    this.setScale(this.scale * 1.01);
+  },
+
+  destroy: function () {
+    this.game.snakes.splice(this.game.snakes.indexOf(this), 1);
+    this.sections.forEach(function (sec, index) {
+      sec.destroy();
+    });
+
+    for (var i = 0; i < this.onDestroyedCallbacks.length; i++) {
+      if (typeof this.onDestroyedCallbacks[i] == 'function') {
+        this.onDestroyedCallbacks[i].apply(
+          this.onDestroyedContexts[i], [this]
+        );
+      }
+    }
+  },
+
+  addDestroyedCallback: function (callback, context) {
+    this.onDestroyedCallbacks.push(callback);
+    this.onDestroyedContexts.push(context);
   }
-
-}
+};
